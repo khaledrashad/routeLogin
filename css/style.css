@@ -1,0 +1,7 @@
+.signUp a {
+    text-decoration: none;
+}
+
+.signUp a:hover {
+    text-decoration: underline;
+}
