@@ -1,4 +1,4 @@
-const loginBtn = document.getElementById("formBtn")
+const loginBtn = document.querySelector(".loginForm button")
 const emailInput = document.getElementById("emailInput")
 const passwordInput = document.getElementById("passwordInput")
 const errorMessage = document.getElementById("errorMessage")
@@ -7,9 +7,28 @@ const emailSignUpInput = document.getElementById("emailSignUpInput")
 const passwordSignUpInput = document.getElementById("passwordSignUpInput")
 const signUpBtn = document.getElementById("signUpBtn")
 
-const usersList = []
 
-signUpBtn.addEventListener("click", addUser)
+console.log(logoutBtn);
+
+let usersList = []
+if(localStorage.getItem("usersData") != null){
+    usersList = JSON.parse(localStorage.getItem("usersData")) 
+}
+
+console.log(usersList)
+loginBtn.addEventListener("click",()=>{
+let validUser = []
+usersList.forEach((el)=>{
+    if(emailInput.value == el.email && passwordInput.value == el.password){
+            validUser.push(el)
+        }
+ })
+    if(validUser.length != 0 ){
+        console.log(loginMessage.innerText)
+    } else {
+        errorMessage.innerHTML = "Enter valid email and password"
+    }
+ })
 
 function addUser() {
     const user = {
@@ -23,8 +42,7 @@ function addUser() {
     let emailValidity = emailRgx.test(emailSignUpInput.value)
     if (emailValidity == true && passwordValidity == true) {
         usersList.push(user)
-        localStorage.setItem("usersData", JSON.stringify(user))
-        console.log(usersList)
+        localStorage.setItem("usersData", JSON.stringify(usersList))
         errorMessage.innerHTML=`User created`
         nameSignUpInput.value = ""
         emailSignUpInput.value = ""
@@ -44,3 +62,5 @@ function addUser() {
     }
 
 }
+signUpBtn.addEventListener("click", addUser)
+
