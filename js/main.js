@@ -6,29 +6,18 @@ const nameSignUpInput = document.getElementById("nameSignUpInput")
 const emailSignUpInput = document.getElementById("emailSignUpInput")
 const passwordSignUpInput = document.getElementById("passwordSignUpInput")
 const signUpBtn = document.getElementById("signUpBtn")
+const logoutBtn = document.getElementById("logoutBtn")
 
-
-console.log(logoutBtn);
+if(window.location.href == "http://127.0.0.1:5500/homePage.html"){
+    const welcomeMessage = document.getElementById("welcomeMessage")
+    welcomeMessage.innerHTML = `Welcome ${localStorage.getItem("currentUser")}`
+}
 
 let usersList = []
 if(localStorage.getItem("usersData") != null){
     usersList = JSON.parse(localStorage.getItem("usersData")) 
 }
 
-console.log(usersList)
-loginBtn.addEventListener("click",()=>{
-let validUser = []
-usersList.forEach((el)=>{
-    if(emailInput.value == el.email && passwordInput.value == el.password){
-            validUser.push(el)
-        }
- })
-    if(validUser.length != 0 ){
-        console.log(loginMessage.innerText)
-    } else {
-        errorMessage.innerHTML = "Enter valid email and password"
-    }
- })
 
 function addUser() {
     const user = {
@@ -40,7 +29,16 @@ function addUser() {
     let emailRgx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     let passwordValidity = passwordRgx.test(passwordSignUpInput.value)
     let emailValidity = emailRgx.test(emailSignUpInput.value)
-    if (emailValidity == true && passwordValidity == true) {
+    let userSaved = JSON.parse(localStorage.getItem("usersData"))
+    let alreadySaved = []
+    userSaved.forEach((el)=>{
+        if(emailSignUpInput.value == el.email){
+            alreadySaved.push(el)
+        }
+    })
+    if (alreadySaved.length != 0){
+        errorMessage.innerHTML = "User already created"
+    } else if(emailValidity == true && passwordValidity == true) {
         usersList.push(user)
         localStorage.setItem("usersData", JSON.stringify(usersList))
         errorMessage.innerHTML=`User created`
@@ -62,5 +60,22 @@ function addUser() {
     }
 
 }
-signUpBtn.addEventListener("click", addUser)
+function logOut (){
+    window.location.href = "index.html"
+}
+loginBtn.addEventListener("click",()=>{
+    let validUser = []
+    usersList.forEach((el)=>{
+        if(emailInput.value == el.email && passwordInput.value == el.password){
+                validUser.push(el)
+            }
+     })
+        if(validUser.length != 0 ){
+            localStorage.setItem("currentUser", validUser[0].name)
+            window.location.href = "homePage.html"
+           
+        } else {
+            errorMessage.innerHTML = "Enter valid email and password"
+        }
+     })
 
